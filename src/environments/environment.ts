@@ -1,8 +1,8 @@
-// Ambiente de producao (build default).
-// A URL da API segue o contrato em docs/architecture/API_SPEC.md (base `/api`).
-// Ajuste `apiUrl` para o dominio real do backend quando ele estiver disponivel/deployado.
+// Ambiente de producao (branch `main`, build default).
+// URL do backend no Render — ver docs/architecture/DEPLOY.md para o nome do
+// servico recomendado. Se o servico no Render tiver outro nome, ajuste aqui.
 export const environment = {
   production: true,
-  apiUrl: '/api',
+  apiUrl: 'https://vitrine-condominio-backend.onrender.com/api',
   whatsappCountryCode: '55'
 };
