@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:homol": "ng build --configuration=production,homol",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
