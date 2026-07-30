@@ -1,0 +1,69 @@
+<div class="container product-form">
+  <h1>{{ isEditMode ? 'Editar anuncio' : 'Anunciar produto' }}</h1>
+
+  @if (loadingProduct) {
+    <app-loading-spinner message="Carregando anuncio..." />
+  } @else {
+    <form class="card product-form__card" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      @if (errorMessage) {
+        <p class="form-error-summary" role="alert">{{ errorMessage }}</p>
+      }
+
+      <div class="form-field">
+        <label for="photos">Foto do produto</label>
+        <app-image-uploader
+          formControlName="photos"
+          [existingImageUrl]="existingImageUrl"
+          (fileError)="photoError = $event"
+        />
+        @if (photoError) {
+          <span class="field-error">{{ photoError }}</span>
+        }
+        @if (form.controls.photos.invalid && form.controls.photos.touched) {
+          <span class="field-error">Adicione pelo menos 1 foto do produto.</span>
+        }
+      </div>
+
+      <div class="form-field" [class.has-error]="form.controls.name.invalid && form.controls.name.touched">
+        <label for="name">Nome</label>
+        <input id="name" type="text" formControlName="name" maxlength="120" />
+        @if (form.controls.name.invalid && form.controls.name.touched) {
+          <span class="field-error">Informe o nome do produto.</span>
+        }
+      </div>
+
+      <div class="form-field" [class.has-error]="form.controls.description.invalid && form.controls.description.touched">
+        <label for="description">Descricao</label>
+        <textarea id="description" formControlName="description" rows="4"></textarea>
+        @if (form.controls.description.invalid && form.controls.description.touched) {
+          <span class="field-error">Descreva o produto (estado de conservacao, detalhes, etc).</span>
+        }
+      </div>
+
+      <div class="form-field" [class.has-error]="form.controls.categoryId.invalid && form.controls.categoryId.touched">
+        <label for="categoryId">Categoria</label>
+        <select id="categoryId" formControlName="categoryId">
+          <option value="" disabled>{{ loadingCategories ? 'Carregando categorias...' : 'Selecione a categoria' }}</option>
+          @for (category of categories; track category.id) {
+            <option [value]="category.id">{{ category.name }}</option>
+          }
+        </select>
+        @if (form.controls.categoryId.invalid && form.controls.categoryId.touched) {
+          <span class="field-error">Selecione uma categoria.</span>
+        }
+      </div>
+
+      <div class="form-field" [class.has-error]="form.controls.price.invalid && form.controls.price.touched">
+        <label for="price">Valor (R$)</label>
+        <input id="price" type="text" inputmode="decimal" formControlName="price" placeholder="0,00" />
+        @if (form.controls.price.invalid && form.controls.price.touched) {
+          <span class="field-error">Informe um valor valido (ex.: 150,00).</span>
+        }
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block" [disabled]="submitting">
+        {{ submitting ? 'Salvando...' : isEditMode ? 'Salvar alteracoes' : 'Publicar anuncio' }}
+      </button>
+    </form>
+  }
+</div>

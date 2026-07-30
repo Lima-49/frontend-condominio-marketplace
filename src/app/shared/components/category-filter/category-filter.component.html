@@ -1,0 +1,24 @@
+<div class="category-filter" role="tablist" aria-label="Filtrar por categoria">
+  <button
+    type="button"
+    class="chip"
+    role="tab"
+    [class.active]="selectedCategoryId === null"
+    [attr.aria-selected]="selectedCategoryId === null"
+    (click)="select(null)"
+  >
+    Todas
+  </button>
+  @for (category of categories; track category.id) {
+    <button
+      type="button"
+      class="chip"
+      role="tab"
+      [class.active]="selectedCategoryId === category.id"
+      [attr.aria-selected]="selectedCategoryId === category.id"
+      (click)="select(category.id)"
+    >
+      {{ category.name }}
+    </button>
+  }
+</div>

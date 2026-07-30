@@ -1,0 +1,12 @@
+<div class="search-bar">
+  <span class="search-bar__icon" aria-hidden="true">🔎</span>
+  <input
+    type="search"
+    [formControl]="searchControl"
+    [placeholder]="placeholder"
+    [attr.aria-label]="placeholder"
+  />
+  @if (searchControl.value) {
+    <button type="button" class="search-bar__clear" aria-label="Limpar busca" (click)="clear()">✕</button>
+  }
+</div>

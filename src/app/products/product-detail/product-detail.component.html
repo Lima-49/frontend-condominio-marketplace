@@ -1,0 +1,81 @@
+@if (loading) {
+  <div class="container">
+    <app-loading-spinner message="Carregando produto..." />
+  </div>
+} @else if (notFound || !product) {
+  <div class="container">
+    <app-empty-state
+      icon="🚫"
+      message="Produto nao encontrado"
+      description="Ele pode ter sido removido ou nao existe mais."
+    >
+      <a routerLink="/produtos" class="btn btn-secondary">Voltar para a vitrine</a>
+    </app-empty-state>
+  </div>
+} @else {
+  <div class="product-detail">
+    <div class="product-detail__image">
+      @if (coverImageUrl) {
+        <button
+          type="button"
+          class="product-detail__image-trigger"
+          (click)="openImageModal()"
+          attr.aria-label="Ver foto de {{ product.name }} em tamanho maior"
+        >
+          <img [src]="coverImageUrl" [alt]="product.name" />
+        </button>
+      } @else {
+        <div class="product-detail__placeholder" aria-hidden="true">📦</div>
+      }
+    </div>
+
+    <div class="container product-detail__body">
+      <div class="product-detail__heading">
+        <h1>{{ product.name }}</h1>
+        <app-status-badge [status]="product.status" />
+      </div>
+
+      <p class="product-detail__price">{{ product.priceCents | priceCents }}</p>
+      <p class="product-detail__category">{{ product.category.name }}</p>
+
+      <section class="product-detail__section">
+        <h2>Descricao</h2>
+        <p>{{ product.description }}</p>
+      </section>
+
+      <section class="product-detail__section">
+        <h2>Vendedor</h2>
+        <p>{{ product.seller.firstName }}</p>
+      </section>
+
+      @if (product.isOwner) {
+        <a class="btn btn-secondary btn-block" [routerLink]="['/produtos', product.id, 'editar']">
+          Editar este anuncio
+        </a>
+      }
+
+      @if (whatsappError) {
+        <p class="form-error-summary" role="alert">{{ whatsappError }}</p>
+      }
+    </div>
+
+    <app-whatsapp-button
+      [disabled]="whatsappDisabled"
+      [disabledMessage]="whatsappDisabledMessage"
+      [loading]="whatsappLoading"
+      (activate)="callWhatsapp()"
+    />
+  </div>
+
+  @if (imageModalOpen && coverImageUrl) {
+    <div class="image-modal" (click)="closeImageModal()">
+      <button type="button" class="image-modal__close" (click)="closeImageModal()" aria-label="Fechar">✕</button>
+      <img
+        class="image-modal__image"
+        [src]="coverImageUrl"
+        [alt]="product.name"
+        (click)="$event.stopPropagation()"
+      />
+    </div>
+  }
+}

@@ -1,0 +1,8 @@
+<div class="state-block" role="status">
+  <span class="state-block__icon" aria-hidden="true">{{ icon }}</span>
+  <p class="state-block__message">{{ message }}</p>
+  @if (description) {
+    <p class="state-block__description">{{ description }}</p>
+  }
+  <ng-content></ng-content>
+</div>

@@ -1,0 +1,15 @@
+<a class="product-card" [class.product-card--sold]="product.status === 'sold'" [routerLink]="['/produtos', product.id]">
+  <div class="product-card__image">
+    @if (product.coverImageUrl) {
+      <img [src]="product.coverImageUrl" [alt]="product.name" loading="lazy" />
+    } @else {
+      <div class="product-card__placeholder" aria-hidden="true">📦</div>
+    }
+    <app-status-badge class="product-card__badge" [status]="product.status" />
+  </div>
+  <div class="product-card__body">
+    <p class="product-card__name">{{ product.name }}</p>
+    <p class="product-card__price">{{ product.priceCents | priceCents }}</p>
+    <p class="product-card__category">{{ product.category.name }}</p>
+  </div>
+</a>

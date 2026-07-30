@@ -1,0 +1,14 @@
+<div class="whatsapp-button-bar">
+  @if (disabled && disabledMessage) {
+    <p class="whatsapp-button-bar__notice">{{ disabledMessage }}</p>
+  }
+  <button
+    type="button"
+    class="btn btn-whatsapp btn-block"
+    [disabled]="disabled || loading"
+    (click)="onClick()"
+  >
+    <span aria-hidden="true">💬</span>
+    {{ loading ? 'Abrindo WhatsApp...' : 'Chamar no WhatsApp' }}
+  </button>
+</div>

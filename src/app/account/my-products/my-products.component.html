@@ -1,0 +1,77 @@
+<div class="container my-products">
+  <h1>Meus anuncios</h1>
+
+  @if (rowError) {
+    <p class="form-error-summary" role="alert">{{ rowError }}</p>
+  }
+
+  @if (loading) {
+    <app-loading-spinner message="Carregando seus anuncios..." />
+  } @else if (errorMessage) {
+    <app-empty-state icon="⚠️" [message]="errorMessage" />
+  } @else if (products.length === 0) {
+    <app-empty-state
+      icon="🗂️"
+      message="Voce ainda nao tem anuncios"
+      description="Toque em Anunciar para publicar o primeiro produto para seus vizinhos."
+    >
+      <a routerLink="/produtos/novo" class="btn btn-primary">Anunciar produto</a>
+    </app-empty-state>
+  } @else {
+    <ul class="my-products__list">
+      @for (product of products; track product.id) {
+        <li class="card my-products__item">
+          <div class="my-products__thumb">
+            @if (product.coverImageUrl) {
+              <img [src]="product.coverImageUrl" [alt]="product.name" />
+            } @else {
+              <div class="my-products__placeholder" aria-hidden="true">📦</div>
+            }
+          </div>
+
+          <div class="my-products__info">
+            <p class="my-products__name">{{ product.name }}</p>
+            <p class="my-products__price">{{ product.priceCents | priceCents }}</p>
+            <app-status-badge [status]="product.status" />
+          </div>
+
+          <div class="my-products__actions">
+            <label class="my-products__status-label" [attr.for]="'status-' + product.id">Status</label>
+            <select
+              [id]="'status-' + product.id"
+              [ngModel]="product.status"
+              [ngModelOptions]="{ standalone: true }"
+              [disabled]="updatingStatusId === product.id"
+              (ngModelChange)="onStatusChange(product, $event)"
+            >
+              @for (option of statusOptions; track option.value) {
+                <option [value]="option.value">{{ option.label }}</option>
+              }
+            </select>
+
+            <div class="my-products__buttons">
+              <a class="btn btn-secondary" [routerLink]="['/produtos', product.id, 'editar']">Editar</a>
+
+              @if (confirmingDeleteId === product.id) {
+                <button type="button" class="btn btn-danger" [disabled]="deletingId === product.id" (click)="confirmDelete(product.id)">
+                  {{ deletingId === product.id ? 'Excluindo...' : 'Confirmar exclusao' }}
+                </button>
+                <button type="button" class="btn-link" (click)="cancelDelete()">Cancelar</button>
+              } @else {
+                <button type="button" class="btn btn-danger" (click)="askDelete(product.id)">Excluir</button>
+              }
+            </div>
+          </div>
+        </li>
+      }
+    </ul>
+
+    @if (hasMore) {
+      <div class="my-products__load-more">
+        <button type="button" class="btn btn-secondary" [disabled]="loadingMore" (click)="loadMore()">
+          {{ loadingMore ? 'Carregando...' : 'Carregar mais' }}
+        </button>
+      </div>
+    }
+  }
+</div>

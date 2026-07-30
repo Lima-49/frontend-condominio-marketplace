@@ -1,0 +1,21 @@
+<div class="image-uploader">
+  @if (hasPreview) {
+    <div class="image-uploader__preview">
+      <img [src]="displayUrl" alt="Preview da foto do produto" />
+      <button type="button" class="image-uploader__remove" (click)="removeFile()" [disabled]="disabled">
+        Remover foto
+      </button>
+    </div>
+  } @else {
+    <label class="image-uploader__dropzone" [class.disabled]="disabled">
+      <span aria-hidden="true">📷</span>
+      <span>Toque para adicionar uma foto</span>
+      <input
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        [disabled]="disabled"
+        (change)="onFileSelected($event)"
+      />
+    </label>
+  }
+</div>

@@ -1,0 +1,115 @@
+<div class="auth-page">
+  <div class="container">
+    <h1 class="auth-page__title">Criar conta</h1>
+    <p class="auth-page__subtitle">Cadastre-se com os dados do seu condominio.</p>
+
+    <form class="card auth-page__card" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      @if (errorMessage) {
+        <p class="form-error-summary" role="alert">{{ errorMessage }}</p>
+      }
+
+      <div class="form-field" [class.has-error]="form.controls.fullName.invalid && form.controls.fullName.touched">
+        <label for="fullName">Nome completo</label>
+        <input id="fullName" type="text" formControlName="fullName" autocomplete="name" />
+        @if (form.controls.fullName.invalid && form.controls.fullName.touched) {
+          <span class="field-error">Informe seu nome completo (minimo 3 caracteres).</span>
+        }
+      </div>
+
+      <div class="form-field" [class.has-error]="form.controls.whatsapp.invalid && form.controls.whatsapp.touched">
+        <label for="whatsapp">WhatsApp</label>
+        <input id="whatsapp" type="tel" formControlName="whatsapp" placeholder="11999999999" autocomplete="tel-national" />
+        <span class="hint">Apenas numeros, com DDD (ex.: 11999999999). Usado so para contato via WhatsApp.</span>
+        @if (form.controls.whatsapp.invalid && form.controls.whatsapp.touched) {
+          <span class="field-error">
+            @if (form.controls.whatsapp.errors?.['required']) {
+              Informe seu WhatsApp.
+            } @else {
+              Numero invalido: use apenas digitos, com DDD (10 ou 11 numeros).
+            }
+          </span>
+        }
+      </div>
+
+      <div class="form-field" [class.has-error]="form.controls.condominiumId.invalid && form.controls.condominiumId.touched">
+        <label for="condominiumId">Condominio</label>
+        <select id="condominiumId" formControlName="condominiumId">
+          <option value="" disabled>
+            {{ loadingCondominiums ? 'Carregando condominios...' : 'Selecione o seu condominio' }}
+          </option>
+          @for (condominium of condominiums; track condominium.id) {
+            <option [value]="condominium.id">{{ condominium.name }}</option>
+          }
+        </select>
+        @if (condominiumsError) {
+          <span class="field-error">Nao foi possivel carregar a lista de condominios. Recarregue a pagina.</span>
+        }
+        @if (form.controls.condominiumId.invalid && form.controls.condominiumId.touched && !condominiumsError) {
+          <span class="field-error">Selecione o seu condominio.</span>
+        }
+      </div>
+
+      <div class="form-field" [class.has-error]="form.controls.block.invalid && form.controls.block.touched">
+        <label for="block">Bloco</label>
+        <input id="block" type="text" formControlName="block" />
+        <span class="hint">Uso interno para validacao. Nao aparece no anuncio.</span>
+        @if (form.controls.block.invalid && form.controls.block.touched) {
+          <span class="field-error">Informe o bloco.</span>
+        }
+      </div>
+
+      <div class="form-field" [class.has-error]="form.controls.apartment.invalid && form.controls.apartment.touched">
+        <label for="apartment">Apartamento</label>
+        <input id="apartment" type="text" formControlName="apartment" />
+        <span class="hint">Uso interno para validacao. Nao aparece no anuncio.</span>
+        @if (form.controls.apartment.invalid && form.controls.apartment.touched) {
+          <span class="field-error">Informe o apartamento.</span>
+        }
+      </div>
+
+      <div class="form-field" [class.has-error]="form.controls.email.invalid && form.controls.email.touched">
+        <label for="reg-email">Email</label>
+        <input id="reg-email" type="email" formControlName="email" autocomplete="email" />
+        @if (form.controls.email.invalid && form.controls.email.touched) {
+          <span class="field-error">
+            @if (form.controls.email.errors?.['required']) {
+              Informe seu email.
+            } @else {
+              Informe um email valido.
+            }
+          </span>
+        }
+      </div>
+
+      <div class="form-field" [class.has-error]="form.controls.password.invalid && form.controls.password.touched">
+        <label for="reg-password">Senha</label>
+        <input id="reg-password" type="password" formControlName="password" autocomplete="new-password" />
+        @if (form.controls.password.invalid && form.controls.password.touched) {
+          <span class="field-error">A senha deve ter no minimo 8 caracteres.</span>
+        }
+      </div>
+
+      <div
+        class="form-field"
+        [class.has-error]="
+          (form.controls.passwordConfirmation.touched && form.controls.passwordConfirmation.invalid) ||
+          (form.errors?.['passwordMismatch'] && form.controls.passwordConfirmation.touched)
+        "
+      >
+        <label for="passwordConfirmation">Confirmar senha</label>
+        <input id="passwordConfirmation" type="password" formControlName="passwordConfirmation" autocomplete="new-password" />
+        @if (form.controls.passwordConfirmation.touched && form.controls.passwordConfirmation.invalid) {
+          <span class="field-error">Confirme sua senha.</span>
+        } @else if (form.errors?.['passwordMismatch'] && form.controls.passwordConfirmation.touched) {
+          <span class="field-error">As senhas nao coincidem.</span>
+        }
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block" [disabled]="submitting || loadingCondominiums">
+        {{ submitting ? 'Criando conta...' : 'Criar conta' }}
+      </button>
+    </form>
+
+    <p class="auth-page__footer">Ja tem conta? <a routerLink="/login">Entrar</a></p>
+  </div>
+</div>

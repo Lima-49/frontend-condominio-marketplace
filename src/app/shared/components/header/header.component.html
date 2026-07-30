@@ -1,0 +1,18 @@
+<header class="app-header">
+  <div class="container app-header__inner">
+    <a class="app-header__brand" routerLink="/produtos">Vitrine do Condominio</a>
+
+    <nav class="app-header__nav" aria-label="Navegacao principal">
+      <a routerLink="/produtos" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Vitrine</a>
+      <a routerLink="/produtos/novo" routerLinkActive="active">Anunciar</a>
+      <a routerLink="/meus-anuncios" routerLinkActive="active">Meus anuncios</a>
+    </nav>
+
+    <div class="app-header__user">
+      @if (userFirstName) {
+        <span class="app-header__greeting">Ola, {{ userFirstName }}</span>
+      }
+      <button type="button" class="btn-link" (click)="logout()">Sair</button>
+    </div>
+  </div>
+</header>

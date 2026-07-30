@@ -1,0 +1,315 @@
+/* Estilos globais — Vitrine do Condominio.
+   Mobile-first: regras base pensadas para telas pequenas, breakpoints em min-width
+   ampliam o layout para tablet/desktop (CLAUDE.md pede responsividade, prioridade mobile). */
+
+:root {
+  --color-primary: #2f6f4f;
+  --color-primary-dark: #1f5138;
+  --color-primary-light: #e6f2eb;
+  --color-accent: #1f8a4c;
+  --color-whatsapp: #25d366;
+  --color-whatsapp-dark: #1da851;
+  --color-danger: #c0392b;
+  --color-warning: #b8860b;
+  --color-text: #1c1f1e;
+  --color-text-muted: #5f6b66;
+  --color-border: #dfe4e1;
+  --color-bg: #f6f8f7;
+  --color-surface: #ffffff;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+
+  --header-height: 56px;
+  --bottom-nav-height: 64px;
+
+  --breakpoint-tablet: 640px;
+  --breakpoint-desktop: 1024px;
+
+  font-size: 16px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family:
+    'Segoe UI',
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  -webkit-tap-highlight-color: transparent;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--color-primary);
+}
+
+button {
+  font-family: inherit;
+}
+
+.container {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+@media (min-width: 1024px) {
+  .container {
+    max-width: 960px;
+  }
+}
+
+/* Espaco reservado no fim da tela para nao ficar atras do bottom nav / botao flutuante */
+.page-content {
+  padding-bottom: calc(var(--bottom-nav-height) + 24px);
+}
+
+/* Botoes */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 20px;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background-color 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: #fff;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--color-primary-dark);
+}
+
+.btn-secondary {
+  background-color: var(--color-surface);
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.btn-danger {
+  background-color: #fff;
+  color: var(--color-danger);
+  border-color: var(--color-danger);
+}
+
+.btn-whatsapp {
+  background-color: var(--color-whatsapp);
+  color: #fff;
+}
+
+.btn-whatsapp:hover:not(:disabled) {
+  background-color: var(--color-whatsapp-dark);
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  min-height: auto;
+}
+
+/* Formularios */
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.form-field label {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.form-field .hint {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+  min-height: 48px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  font-size: 1rem;
+  color: var(--color-text);
+  width: 100%;
+}
+
+.form-field textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 1px;
+}
+
+.form-field.has-error input,
+.form-field.has-error select,
+.form-field.has-error textarea {
+  border-color: var(--color-danger);
+}
+
+.field-error {
+  color: var(--color-danger);
+  font-size: 0.8rem;
+}
+
+.form-error-summary {
+  background-color: #fdecea;
+  border: 1px solid var(--color-danger);
+  color: var(--color-danger);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  font-size: 0.9rem;
+  margin-bottom: 16px;
+}
+
+.form-success-summary {
+  background-color: var(--color-primary-light);
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary-dark);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  font-size: 0.9rem;
+  margin-bottom: 16px;
+}
+
+/* Cartao generico */
+.card {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+
+/* Chips (filtro de categoria) */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.chip.active {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+
+/* Estados */
+.state-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 12px;
+  padding: 48px 16px;
+  color: var(--color-text-muted);
+}
+
+/* Paginas publicas (login/cadastro) */
+.auth-page {
+  min-height: 100%;
+  padding: 32px 0 48px;
+}
+
+.auth-page__title {
+  font-size: 1.4rem;
+  color: var(--color-primary-dark);
+  text-align: center;
+}
+
+.auth-page__subtitle {
+  text-align: center;
+  color: var(--color-text-muted);
+  margin-top: 6px;
+  margin-bottom: 24px;
+}
+
+.auth-page__card {
+  padding: 20px;
+}
+
+.auth-page__footer {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.9rem;
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

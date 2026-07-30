@@ -1,0 +1,38 @@
+<div class="container showcase">
+  <app-search-bar [initialValue]="search" (search)="onSearch($event)" />
+  <app-category-filter
+    [categories]="categories"
+    [selectedCategoryId]="selectedCategoryId"
+    (categoryChange)="onCategoryChange($event)"
+  />
+
+  @if (loading) {
+    <app-loading-spinner message="Carregando produtos..." />
+  } @else if (errorMessage) {
+    <app-empty-state icon="⚠️" [message]="errorMessage" />
+  } @else if (products.length === 0) {
+    <app-empty-state
+      icon="📭"
+      message="Nenhum produto encontrado"
+      description="Tente ajustar a busca ou os filtros, ou seja o primeiro a anunciar algo por aqui."
+    />
+  } @else {
+    <div class="showcase__grid">
+      @for (product of products; track product.id) {
+        <app-product-card [product]="product" />
+      }
+    </div>
+
+    @if (hasMore) {
+      <div class="showcase__load-more">
+        <button type="button" class="btn btn-secondary" [disabled]="loadingMore" (click)="loadMore()">
+          {{ loadingMore ? 'Carregando...' : 'Carregar mais' }}
+        </button>
+      </div>
+    }
+  }
+</div>
+
+<a routerLink="/produtos/novo" class="showcase__fab" aria-label="Anunciar produto">
+  <span aria-hidden="true">+</span>
+</a>
