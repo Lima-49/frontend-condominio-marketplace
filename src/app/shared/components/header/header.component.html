@@ -6,11 +6,19 @@
       <a routerLink="/produtos" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Vitrine</a>
       <a routerLink="/produtos/novo" routerLinkActive="active">Anunciar</a>
       <a routerLink="/meus-anuncios" routerLinkActive="active">Meus anuncios</a>
+      @if (isPlatformAdmin) {
+        <a routerLink="/admin" routerLinkActive="active">Painel Admin</a>
+      }
     </nav>
 
     <div class="app-header__user">
       @if (userFirstName) {
         <span class="app-header__greeting">Ola, {{ userFirstName }}</span>
+      }
+      @if (isPlatformAdmin) {
+        <a routerLink="/admin" routerLinkActive="active" class="app-header__admin-icon" aria-label="Painel administrativo">
+          <span aria-hidden="true">⚙️</span>
+        </a>
       }
       <button type="button" class="btn-link" (click)="logout()">Sair</button>
     </div>

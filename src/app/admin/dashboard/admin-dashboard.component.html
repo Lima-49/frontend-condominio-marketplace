@@ -1,0 +1,108 @@
+<div class="container admin-dashboard">
+  <h1>Painel Admin</h1>
+
+  @if (pageState === 'loading') {
+    <app-loading-spinner message="Carregando painel administrativo..." />
+  } @else if (pageState === 'error') {
+    <app-empty-state icon="⚠️" message="Nao foi possivel carregar o painel administrativo." description="Tente novamente em instantes.">
+      <button type="button" class="btn btn-primary" (click)="loadDashboard()">Tentar novamente</button>
+    </app-empty-state>
+  } @else if (pageState === 'access-denied') {
+    <app-empty-state icon="🔒" message="Acesso restrito" description="Esta area e restrita ao time administrativo da plataforma.">
+      <a routerLink="/produtos" class="btn btn-primary">Voltar para a vitrine</a>
+    </app-empty-state>
+  } @else {
+    <div class="admin-dashboard__row">
+      <section class="card admin-dashboard__section" aria-labelledby="admin-h2-heading">
+        <h2 id="admin-h2-heading">Usuarios cadastrados por condominio</h2>
+
+        @if (condominiums.length === 0) {
+          <app-empty-state icon="🏢" message="Nenhum condominio cadastrado ainda" />
+        } @else {
+          <app-bar-list [items]="condominiumBarItems" title="Usuarios por condominio" />
+        }
+      </section>
+
+      <section class="card admin-dashboard__section" aria-labelledby="admin-h3-heading">
+        <h2 id="admin-h3-heading">Categorias mais postadas</h2>
+
+        @if (categories.length === 0) {
+          <app-empty-state icon="🏷️" message="Nenhuma categoria cadastrada ainda" />
+        } @else {
+          <app-bar-list [items]="categoryBarItems" title="Categorias mais postadas" />
+        }
+      </section>
+    </div>
+
+    <section class="card admin-dashboard__section" aria-labelledby="admin-h4-heading">
+      <h2 id="admin-h4-heading">Engajamento por usuario</h2>
+
+      <app-stat-card label="Media de anuncios por usuario" [value]="averageDisplay" [description]="averageDescription" />
+
+      @if (!productsPerUser || productsPerUser.topUsers.length === 0) {
+        <app-empty-state icon="👤" message="Nenhum morador com anuncios ainda" />
+      } @else {
+        <div class="admin-dashboard__table-wrap">
+          <table class="admin-dashboard__table">
+            <caption class="sr-only">Top 10 moradores com mais anuncios</caption>
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Morador</th>
+                <th scope="col">Condominio</th>
+                <th scope="col">Anuncios</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (topUser of productsPerUser.topUsers; track topUser.userId; let i = $index) {
+                <tr>
+                  <td>{{ i + 1 }}</td>
+                  <td>{{ topUser.fullName }}</td>
+                  <td>{{ topUser.condominiumName }}</td>
+                  <td>{{ topUser.productCount }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </section>
+
+    <section class="card admin-dashboard__section" aria-labelledby="admin-h5-heading">
+      <h2 id="admin-h5-heading">Cadastrar nova categoria</h2>
+
+      <form [formGroup]="categoryForm" (ngSubmit)="submitCategory()" novalidate>
+        @if (categoryErrorMessage) {
+          <p class="form-error-summary" role="alert">{{ categoryErrorMessage }}</p>
+        }
+        @if (categorySuccessMessage) {
+          <p class="form-success-summary" role="status">{{ categorySuccessMessage }}</p>
+        }
+
+        <div
+          class="form-field"
+          [class.has-error]="(categoryForm.controls.name.invalid && categoryForm.controls.name.touched) || categoryFieldError"
+        >
+          <label for="categoryName">Nome da categoria</label>
+          <input
+            id="categoryName"
+            #categoryNameInput
+            type="text"
+            formControlName="name"
+            maxlength="40"
+            (input)="categoryFieldError = null"
+          />
+          @if (categoryForm.controls.name.invalid && categoryForm.controls.name.touched) {
+            <span class="field-error">Informe um nome com 2 a 40 caracteres.</span>
+          } @else if (categoryFieldError) {
+            <span class="field-error">{{ categoryFieldError }}</span>
+          }
+        </div>
+
+        <button type="submit" class="btn btn-primary" [disabled]="categorySubmitting || categoryForm.invalid">
+          {{ categorySubmitting ? 'Cadastrando...' : 'Cadastrar categoria' }}
+        </button>
+      </form>
+    </section>
+  }
+</div>
