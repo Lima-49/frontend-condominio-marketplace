@@ -71,3 +71,21 @@ export function reaisToCents(value: string): number {
 export function centsToReaisInput(cents: number): string {
   return (cents / 100).toFixed(2).replace('.', ',');
 }
+
+/**
+ * Tamanho minimo/maximo considerando o valor "trimado" (sem espaco nas pontas).
+ * Usado no nome de categoria do Painel Admin (H5): evita habilitar o submit ou aceitar
+ * um nome tipo " a " (3 chars) quando na pratica o nome util tem so 1 char.
+ */
+export function trimmedLengthValidator(min: number, max: number): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const value = ((control.value ?? '') as string).trim();
+    if (!value) {
+      return null; // deixa o Validators.required cuidar de campo vazio
+    }
+    if (value.length < min || value.length > max) {
+      return { trimmedLength: { min, max, actual: value.length } };
+    }
+    return null;
+  };
+}

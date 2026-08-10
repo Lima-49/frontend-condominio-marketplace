@@ -25,6 +25,11 @@ export class HeaderComponent {
     return user?.fullName?.split(' ')[0] ?? '';
   }
 
+  /** Link "Painel Admin" (desktop/tablet no menu, mobile como icone) so aparece para platform_admin. */
+  get isPlatformAdmin(): boolean {
+    return this.authService.currentUser()?.role === 'platform_admin';
+  }
+
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);

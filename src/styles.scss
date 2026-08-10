@@ -299,6 +299,19 @@ button {
   font-size: 0.9rem;
 }
 
+/* Visivel so para leitor de tela (ex.: caption de tabela ja identificada por um <h2> visual). */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .spinner {
   width: 32px;
   height: 32px;

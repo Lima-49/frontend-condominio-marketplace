@@ -1,0 +1,11 @@
+<ul class="bar-list" [attr.aria-label]="title || null">
+  @for (item of items; track item.label) {
+    <li class="bar-list__row" [class.bar-list__row--zero]="item.value === 0">
+      <span class="bar-list__label">{{ item.label }}</span>
+      <span class="bar-list__track">
+        <span class="bar-list__bar" aria-hidden="true" [style.width]="widthFor(item.value)"></span>
+      </span>
+      <span class="bar-list__value">{{ item.value }}</span>
+    </li>
+  }
+</ul>
