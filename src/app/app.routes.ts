@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 
+import { adminGuard } from './core/guards/admin.guard';
 import { authGuard } from './core/guards/auth.guard';
 import { guestGuard } from './core/guards/guest.guard';
 import { ShellComponent } from './layout/shell/shell.component';
@@ -45,6 +46,11 @@ export const routes: Routes = [
       {
         path: 'meus-anuncios',
         loadComponent: () => import('./account/my-products/my-products.component').then((m) => m.MyProductsComponent)
+      },
+      {
+        path: 'admin',
+        canActivate: [adminGuard],
+        loadComponent: () => import('./admin/dashboard/admin-dashboard.component').then((m) => m.AdminDashboardComponent)
       }
     ]
   },

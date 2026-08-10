@@ -6,6 +6,7 @@ import {
   moneyValidator,
   passwordsMatchValidator,
   reaisToCents,
+  trimmedLengthValidator,
   whatsappValidator
 } from './custom-validators';
 
@@ -86,5 +87,27 @@ describe('reaisToCents / centsToReaisInput', () => {
   it('converte centavos para o texto exibido no formulario', () => {
     expect(centsToReaisInput(15000)).toBe('150,00');
     expect(centsToReaisInput(15050)).toBe('150,50');
+  });
+});
+
+describe('trimmedLengthValidator', () => {
+  const validator = trimmedLengthValidator(2, 40);
+
+  it('aceita valor dentro do intervalo', () => {
+    expect(validator(new FormControl('Livros'))).toBeNull();
+  });
+
+  it('rejeita valor cujo tamanho trimado fica abaixo do minimo', () => {
+    expect(validator(new FormControl(' a '))).toEqual({ trimmedLength: { min: 2, max: 40, actual: 1 } });
+  });
+
+  it('rejeita valor cujo tamanho trimado fica acima do maximo', () => {
+    const tooLong = 'a'.repeat(41);
+    expect(validator(new FormControl(tooLong))).toEqual({ trimmedLength: { min: 2, max: 40, actual: 41 } });
+  });
+
+  it('nao valida campo vazio (deixa o Validators.required cuidar disso)', () => {
+    expect(validator(new FormControl(''))).toBeNull();
+    expect(validator(new FormControl('   '))).toBeNull();
   });
 });

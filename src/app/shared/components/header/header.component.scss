@@ -54,6 +54,23 @@
   color: var(--color-text-muted);
 }
 
+/* Mobile (< 640px): a nav some (bottom-nav assume a navegacao), entao o Painel Admin
+   fica acessivel como icone compacto ao lado de "Sair" (ADMIN_DASHBOARD_DESIGN.md secao 1). */
+.app-header__admin-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  font-size: 1.1rem;
+}
+
+.app-header__admin-icon.active {
+  background-color: var(--color-primary-light);
+}
+
 @media (min-width: 640px) {
   .app-header__nav {
     display: flex;
@@ -61,5 +78,10 @@
 
   .app-header__greeting {
     display: inline;
+  }
+
+  /* A partir daqui o link "Painel Admin" ja aparece dentro da nav — evita duplicar o acesso. */
+  .app-header__admin-icon {
+    display: none;
   }
 }
