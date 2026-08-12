@@ -9,6 +9,6 @@
     (click)="onClick()"
   >
     <span aria-hidden="true">💬</span>
-    {{ loading ? 'Abrindo WhatsApp...' : 'Chamar no WhatsApp' }}
+    {{ loading ? loadingLabel : label }}
   </button>
 </div>
