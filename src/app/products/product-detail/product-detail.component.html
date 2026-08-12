@@ -63,7 +63,8 @@
       [disabled]="whatsappDisabled"
       [disabledMessage]="whatsappDisabledMessage"
       [loading]="whatsappLoading"
-      (activate)="callWhatsapp()"
+      [label]="whatsappLabel"
+      (activate)="onWhatsappActivate()"
     />
   </div>
 
