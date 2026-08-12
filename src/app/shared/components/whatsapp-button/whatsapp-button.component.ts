@@ -18,6 +18,8 @@ export class WhatsappButtonComponent {
   @Input() disabled = false;
   @Input() loading = false;
   @Input() disabledMessage: string | null = null;
+  @Input() label = 'Chamar no WhatsApp';
+  @Input() loadingLabel = 'Abrindo WhatsApp...';
   @Output() activate = new EventEmitter<void>();
 
   onClick(): void {
