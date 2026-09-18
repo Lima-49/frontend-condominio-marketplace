@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
@@ -41,9 +41,16 @@ export class MyProductsComponent implements OnInit {
   errorMessage: string | null = null;
 
   updatingStatusId: string | null = null;
-  deletingId: string | null = null;
-  confirmingDeleteId: string | null = null;
   rowError: string | null = null;
+
+  /** Produto pendente de confirmacao no modal de exclusao (secao 4 do design doc). */
+  productPendingDelete: ProductListItem | null = null;
+  deleting = false;
+  deleteError: string | null = null;
+  private deleteTriggerEl: HTMLElement | null = null;
+
+  @ViewChild('cancelDeleteBtn') private cancelDeleteBtn?: ElementRef<HTMLButtonElement>;
+  @ViewChild('confirmDeleteBtn') private confirmDeleteBtn?: ElementRef<HTMLButtonElement>;
 
   constructor(private readonly productService: ProductService) {}
 
@@ -79,29 +86,72 @@ export class MyProductsComponent implements OnInit {
     });
   }
 
-  askDelete(productId: string): void {
-    this.confirmingDeleteId = productId;
+  askDelete(product: ProductListItem, event: Event): void {
+    this.deleteTriggerEl = event.currentTarget as HTMLElement;
+    this.productPendingDelete = product;
+    this.deleteError = null;
+    // Foco inicial no botao Cancelar (secao 4/acessibilidade do design doc); precisa de setTimeout
+    // porque o botao so existe no DOM apos o Angular renderizar o `@if` deste ciclo.
+    setTimeout(() => this.cancelDeleteBtn?.nativeElement.focus());
   }
 
   cancelDelete(): void {
-    this.confirmingDeleteId = null;
+    if (this.deleting) return;
+    this.productPendingDelete = null;
+    this.deleteError = null;
+    this.restoreFocus();
   }
 
-  confirmDelete(productId: string): void {
-    this.rowError = null;
-    this.deletingId = productId;
-    this.productService.delete(productId).subscribe({
+  confirmDelete(): void {
+    if (!this.productPendingDelete || this.deleting) return;
+
+    const product = this.productPendingDelete;
+    this.deleting = true;
+    this.deleteError = null;
+    this.productService.delete(product.id).subscribe({
       next: () => {
-        this.deletingId = null;
-        this.confirmingDeleteId = null;
-        this.products = this.products.filter((product) => product.id !== productId);
+        this.deleting = false;
+        this.products = this.products.filter((p) => p.id !== product.id);
         this.total = Math.max(0, this.total - 1);
+        this.productPendingDelete = null;
+        this.restoreFocus();
       },
       error: (error: ApiErrorBody) => {
-        this.deletingId = null;
-        this.rowError = error.message || 'Nao foi possivel excluir o anuncio.';
+        this.deleting = false;
+        this.deleteError = error.message || 'Nao foi possivel excluir o anuncio.';
       }
     });
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscapeKey(): void {
+    if (this.productPendingDelete) {
+      this.cancelDelete();
+    }
+  }
+
+  /** Focus trap do modal (secao 4/acessibilidade do design doc): Tab/Shift+Tab ciclam entre Cancelar e Excluir. */
+  onModalTab(event: Event): void {
+    const keyboardEvent = event as KeyboardEvent;
+    if (keyboardEvent.key !== 'Tab') return;
+
+    const first = this.cancelDeleteBtn?.nativeElement;
+    const last = this.confirmDeleteBtn?.nativeElement;
+    if (!first || !last) return;
+
+    const active = document.activeElement;
+    if (keyboardEvent.shiftKey && active === first) {
+      keyboardEvent.preventDefault();
+      last.focus();
+    } else if (!keyboardEvent.shiftKey && active === last) {
+      keyboardEvent.preventDefault();
+      first.focus();
+    }
+  }
+
+  private restoreFocus(): void {
+    this.deleteTriggerEl?.focus();
+    this.deleteTriggerEl = null;
   }
 
   private fetch(append = false): void {
