@@ -24,6 +24,15 @@
   padding: 12px;
 }
 
+/* Mesmo tratamento visual de .product-card--sold (product-card.component.scss): so reforco
+   visual, o texto/badge de status continua sendo a fonte de verdade (acessibilidade). So a
+   miniatura/info esmaecem — os botoes de acao continuam com opacidade normal (secao 2 do design
+   doc: editar/reverter/excluir seguem plenamente visiveis e clicaveis num item vendido). */
+.my-products__item--sold .my-products__thumb,
+.my-products__item--sold .my-products__info {
+  opacity: 0.75;
+}
+
 .my-products__thumb {
   width: 88px;
   height: 88px;
@@ -102,4 +111,56 @@
   display: flex;
   justify-content: center;
   padding: 16px 0;
+}
+
+/* Modal de confirmacao de exclusao (secao 4 do design doc): mesma linguagem visual de
+   .image-modal em product-detail.component.scss (backdrop escuro + caixa centralizada). */
+.delete-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.delete-modal__box {
+  width: calc(100% - 32px);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.delete-modal__box h2 {
+  font-size: 1.1rem;
+}
+
+.delete-modal__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.delete-modal__actions .btn {
+  min-height: 40px;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .delete-modal__box {
+    width: auto;
+    max-width: 400px;
+  }
+
+  .delete-modal__actions {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+
+  .delete-modal__actions .btn {
+    width: auto;
+  }
 }

@@ -20,7 +20,7 @@
   } @else {
     <ul class="my-products__list">
       @for (product of products; track product.id) {
-        <li class="card my-products__item">
+        <li class="card my-products__item" [class.my-products__item--sold]="product.status === 'sold'">
           <div class="my-products__thumb">
             @if (product.coverImageUrl) {
               <img [src]="product.coverImageUrl" [alt]="product.name" />
@@ -51,15 +51,7 @@
 
             <div class="my-products__buttons">
               <a class="btn btn-secondary" [routerLink]="['/produtos', product.id, 'editar']">Editar</a>
-
-              @if (confirmingDeleteId === product.id) {
-                <button type="button" class="btn btn-danger" [disabled]="deletingId === product.id" (click)="confirmDelete(product.id)">
-                  {{ deletingId === product.id ? 'Excluindo...' : 'Confirmar exclusao' }}
-                </button>
-                <button type="button" class="btn-link" (click)="cancelDelete()">Cancelar</button>
-              } @else {
-                <button type="button" class="btn btn-danger" (click)="askDelete(product.id)">Excluir</button>
-              }
+              <button type="button" class="btn btn-danger" aria-haspopup="dialog" (click)="askDelete(product, $event)">Excluir</button>
             </div>
           </div>
         </li>
@@ -75,3 +67,25 @@
     }
   }
 </div>
+
+@if (productPendingDelete) {
+  <div class="delete-modal" role="dialog" aria-modal="true" aria-labelledby="delete-modal-title" (click)="cancelDelete()" (keydown)="onModalTab($event)">
+    <div class="delete-modal__box card" (click)="$event.stopPropagation()">
+      <h2 id="delete-modal-title">Excluir anuncio?</h2>
+      <p>Tem certeza que deseja excluir "{{ productPendingDelete.name }}"? Essa acao nao pode ser desfeita.</p>
+
+      @if (deleteError) {
+        <p class="form-error-summary" role="alert">{{ deleteError }}</p>
+      }
+
+      <div class="delete-modal__actions">
+        <button #cancelDeleteBtn type="button" class="btn btn-secondary" [disabled]="deleting" (click)="cancelDelete()">
+          Cancelar
+        </button>
+        <button #confirmDeleteBtn type="button" class="btn btn-danger" [disabled]="deleting" (click)="confirmDelete()">
+          {{ deleting ? 'Excluindo...' : 'Excluir' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
