@@ -69,7 +69,7 @@
 </div>
 
 @if (productPendingDelete) {
-  <div class="delete-modal" role="dialog" aria-modal="true" aria-labelledby="delete-modal-title" (click)="cancelDelete()">
+  <div class="delete-modal" role="dialog" aria-modal="true" aria-labelledby="delete-modal-title" (click)="cancelDelete()" (keydown)="onModalTab($event)">
     <div class="delete-modal__box card" (click)="$event.stopPropagation()">
       <h2 id="delete-modal-title">Excluir anuncio?</h2>
       <p>Tem certeza que deseja excluir "{{ productPendingDelete.name }}"? Essa acao nao pode ser desfeita.</p>
@@ -82,7 +82,7 @@
         <button #cancelDeleteBtn type="button" class="btn btn-secondary" [disabled]="deleting" (click)="cancelDelete()">
           Cancelar
         </button>
-        <button type="button" class="btn btn-danger" [disabled]="deleting" (click)="confirmDelete()">
+        <button #confirmDeleteBtn type="button" class="btn btn-danger" [disabled]="deleting" (click)="confirmDelete()">
           {{ deleting ? 'Excluindo...' : 'Excluir' }}
         </button>
       </div>

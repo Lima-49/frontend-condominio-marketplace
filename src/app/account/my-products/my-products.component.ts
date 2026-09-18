@@ -50,6 +50,7 @@ export class MyProductsComponent implements OnInit {
   private deleteTriggerEl: HTMLElement | null = null;
 
   @ViewChild('cancelDeleteBtn') private cancelDeleteBtn?: ElementRef<HTMLButtonElement>;
+  @ViewChild('confirmDeleteBtn') private confirmDeleteBtn?: ElementRef<HTMLButtonElement>;
 
   constructor(private readonly productService: ProductService) {}
 
@@ -126,6 +127,25 @@ export class MyProductsComponent implements OnInit {
   onEscapeKey(): void {
     if (this.productPendingDelete) {
       this.cancelDelete();
+    }
+  }
+
+  /** Focus trap do modal (secao 4/acessibilidade do design doc): Tab/Shift+Tab ciclam entre Cancelar e Excluir. */
+  onModalTab(event: Event): void {
+    const keyboardEvent = event as KeyboardEvent;
+    if (keyboardEvent.key !== 'Tab') return;
+
+    const first = this.cancelDeleteBtn?.nativeElement;
+    const last = this.confirmDeleteBtn?.nativeElement;
+    if (!first || !last) return;
+
+    const active = document.activeElement;
+    if (keyboardEvent.shiftKey && active === first) {
+      keyboardEvent.preventDefault();
+      last.focus();
+    } else if (!keyboardEvent.shiftKey && active === last) {
+      keyboardEvent.preventDefault();
+      first.focus();
     }
   }
 

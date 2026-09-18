@@ -139,6 +139,38 @@ describe('MyProductsComponent', () => {
     expect(fixture.nativeElement.querySelector('.delete-modal')).toBeNull();
   });
 
+  it('focus trap: Tab no botao Excluir (ultimo) volta o foco para Cancelar (primeiro)', () => {
+    const button = document.createElement('button');
+    component.askDelete(component.products[0], { currentTarget: button } as unknown as Event);
+    fixture.detectChanges();
+
+    const modal = fixture.nativeElement.querySelector('.delete-modal');
+    const [cancelBtn, confirmBtn] = fixture.nativeElement.querySelectorAll('.delete-modal__actions button');
+    confirmBtn.focus();
+
+    const event = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true });
+    modal.dispatchEvent(event);
+
+    expect(event.defaultPrevented).toBeTrue();
+    expect(document.activeElement).toBe(cancelBtn);
+  });
+
+  it('focus trap: Shift+Tab no botao Cancelar (primeiro) vai para Excluir (ultimo)', () => {
+    const button = document.createElement('button');
+    component.askDelete(component.products[0], { currentTarget: button } as unknown as Event);
+    fixture.detectChanges();
+
+    const modal = fixture.nativeElement.querySelector('.delete-modal');
+    const [cancelBtn, confirmBtn] = fixture.nativeElement.querySelectorAll('.delete-modal__actions button');
+    cancelBtn.focus();
+
+    const event = new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true, cancelable: true });
+    modal.dispatchEvent(event);
+
+    expect(event.defaultPrevented).toBeTrue();
+    expect(document.activeElement).toBe(confirmBtn);
+  });
+
   it('mantem o modal aberto com mensagem de erro quando a exclusao falha', () => {
     const button = document.createElement('button');
     const product = component.products[0];
